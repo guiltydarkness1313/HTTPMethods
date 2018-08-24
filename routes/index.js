@@ -10,30 +10,39 @@ var database = [];
 database.push({message:'Node.JS facilita las cosas'});
 database.push({message: 'Javascript es sencillo'});
 
-router.get('/messages',function (req,res) {
+router.get('/message', function (req,res) {
   res.send(database);
 });
 
-router.post('/messages',function (req,res) {
+router.post('/message', function (req,res) {
     req.body = JSON.parse(JSON.stringify(req.body));
     if (req.body === undefined || isEmpty(req.body) || !req.body.message){
         res.status(400).send();
     } else{
-        database.push(req.body)
+        database.push(req.body);
+        res.status(200).send(req.body);
     }
 });
 
-router.put('/messages',function (req,res) {
-    res.status(405).send();
+router.put('/message',function (req,res) {
+    req.body = JSON.parse(JSON.stringify(req.body));
+    if (req.body === undefined || isEmpty(req.body) || !req.body.message || !req.body.id){
+        res.status(400).send();
+    } else{
+        let id = req.body.id;
+        database[id] = {"message":req.body.message};
+        res.status(200).send(database[id]);
+    }
+
 });
 
-router.delete('/messages',function (req,res) {
-    req.body = JSON.parse(JSON.stringify(re.body));
+router.delete('/message',function (req,res) {
+    req.body = JSON.parse(JSON.stringify(req.body));
     if (req.body === undefined || isEmpty(req.body) || !req.body.message) {
        res.status(400).send();
     }else{
         database=[];
-        res.status(200).send("Se elimino todo la información");
+        res.status(200).send(database);
     }
 });
 
@@ -45,10 +54,10 @@ router.get('/message/:id',function (req,res) {
      res.send(database[id]);
    }
 });
-
+/*
 router.post('/message/:id',function (req,res) {
     res.status(405).send();
-});
+});*/
 
 router.put('/message/:id',function (req,res) {
     req.body = JSON.parse(JSON.stringify(req.body));
@@ -70,10 +79,10 @@ router.delete('/message/:id',function (req,res) {
    }
 });
 
-router.post('/message',function (req,res) {
+/*router.post('/message',function (req,res) {
    database.push(req.body);
    res.status(201).send(req.body);
-});
+});*/
 
 function isEmpty(obj){
   for (var prop in obj){
